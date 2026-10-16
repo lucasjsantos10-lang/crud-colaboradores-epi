@@ -1,0 +1,48 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Colaborador</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Colaborador</h1>
+
+        <form method="POST" action="{% url 'nucleo-editar' colaborador.id %}">
+            {% csrf_token %}
+
+            <div>
+                <label for="nome">Nome</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    maxlength="30"
+                    value="{{ colaborador.nome }}"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="telefone">Telefone</label>
+                <input
+                    type="text"
+                    id="telefone"
+                    name="telefone"
+                    maxlength="30"
+                    value="{{ colaborador.telefone }}"
+                >
+            </div>
+
+            <div>
+                <button type="submit">Salvar alterações</button>
+                <a href="{% url 'nucleo-inicial' %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

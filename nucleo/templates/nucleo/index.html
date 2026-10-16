@@ -1,28 +1,35 @@
-{% load static %}
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Colaboradores</title>
-
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-
 <body>
-
     <div class="container">
         <h1>Lista de Colaboradores</h1>
-        <a href="{% url 'nucleo-criar' %}">Adicionar Colaborador</a>
-        <br/>
+
+        <form method="GET" action="{% url 'nucleo-inicial' %}">
+            <input
+                type="text"
+                name="busca"
+                placeholder="Pesquisar por nome"
+                value="{{ busca }}"
+            >
+            <button type="submit">Pesquisar</button>
+            <a href="{% url 'nucleo-criar' %}">+ Criar</a>
+        </form>
+
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Telefone</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,18 +38,29 @@
                         <td>{{ colaborador.id }}</td>
                         <td>{{ colaborador.nome }}</td>
                         <td>{{ colaborador.telefone }}</td>
+                        <td>
+                            <a href="{% url 'nucleo-editar' colaborador.id %}">
+                                Editar
+                            </a>
+
+                            <form
+                                method="POST"
+                                action="{% url 'nucleo-excluir' colaborador.id %}"
+                                style="display: inline;"
+                                onsubmit="return confirm('Deseja realmente excluir este colaborador?');"
+                            >
+                                {% csrf_token %}
+                                <button type="submit">Excluir</button>
+                            </form>
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="3">
-                            Nenhum colaborador encontrado.
-                        </td>
+                        <td colspan="4">Nenhum colaborador encontrado.</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-
     </div>
-
 </body>
 </html>
