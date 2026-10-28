@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de EPIs | Editar equipamento</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link ativo">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Editar equipamento</h2>
+                    <p>Atualize as informações do equipamento cadastrado.</p>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mensagem-sistema mensagem-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="formulario-sistema">
+                {% csrf_token %}
+
+                <div class="campo-formulario">
+                    <label for="nome">Nome do equipamento *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        maxlength="100"
+                        value="{{ equipamento.nome }}"
+                        required
+                    >
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="descricao">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        rows="3"
+                    >{{ equipamento.descricao }}</textarea>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="quantidade">Quantidade *</label>
+                    <input
+                        type="number"
+                        id="quantidade"
+                        name="quantidade"
+                        min="0"
+                        value="{{ equipamento.quantidade }}"
+                        required
+                    >
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="ca">CA (Certificado de Aprovação)</label>
+                    <input
+                        type="text"
+                        id="ca"
+                        name="ca"
+                        maxlength="30"
+                        value="{{ equipamento.ca }}"
+                    >
+                </div>
+
+                <div class="botoes-formulario">
+                    <button type="submit" class="botao botao-principal">
+                        Salvar alterações
+                    </button>
+
+                    <a href="{% url 'equipamentos-lista' %}" class="botao botao-neutro">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
+    </div>
+</body>
+</html>

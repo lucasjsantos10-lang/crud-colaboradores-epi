@@ -1,0 +1,223 @@
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de EPIs | Empréstimos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link ativo">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Histórico de empréstimos</h2>
+                    <p>Consulte os registros e acompanhe a situação dos EPIs.</p>
+                </div>
+
+                <a href="{% url 'emprestimo-criar' %}" class="botao botao-principal">
+                    + Novo empréstimo
+                </a>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mensagem-sistema mensagem-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- FILTROS -->
+            <section class="filtros-emprestimos">
+                <h3>🔎 Filtrar empréstimos</h3>
+                <p>Selecione um ou mais critérios para refinar a consulta.</p>
+
+                <form method="GET" action="{% url 'emprestimos-lista' %}" class="formulario-sistema">
+
+                    <div class="campo-formulario">
+                        <label for="colaborador">Colaborador</label>
+                        <select name="colaborador" id="colaborador">
+                            <option value="">Todos os colaboradores</option>
+
+                            {% for colaborador in colaboradores %}
+                                <option
+                                    value="{{ colaborador.id }}"
+                                    {% if filtro_colaborador == colaborador.id|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ colaborador.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="equipamento">Equipamento</label>
+                        <select name="equipamento" id="equipamento">
+                            <option value="">Todos os equipamentos</option>
+
+                            {% for equipamento in equipamentos %}
+                                <option
+                                    value="{{ equipamento.id }}"
+                                    {% if filtro_equipamento == equipamento.id|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ equipamento.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="status">Status do empréstimo</label>
+                        <select name="status" id="status">
+                            <option value="">Todos os status</option>
+
+                            {% for valor, descricao in status_choices %}
+                                <option
+                                    value="{{ valor }}"
+                                    {% if filtro_status == valor %}selected{% endif %}
+                                >
+                                    {{ descricao }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="botoes-formulario">
+                        <button type="submit" class="botao botao-principal">
+                            🔎 Filtrar
+                        </button>
+
+                        <a href="{% url 'emprestimos-lista' %}" class="botao botao-secundario">
+                            Limpar filtros
+                        </a>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- RESULTADOS -->
+            <div class="titulo-secao titulo-resultados">
+                <div>
+                    <h3>Registros encontrados</h3>
+                    <p>Os registros permanecem no histórico após a devolução.</p>
+                </div>
+            </div>
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Colaborador</th>
+                            <th>Equipamento</th>
+                            <th>Data de entrega</th>
+                            <th>Devolução prevista</th>
+                            <th>Devolução realizada</th>
+                            <th>Status</th>
+                            <th class="coluna-acoes">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for emprestimo in emprestimos %}
+                            <tr>
+                                <td>{{ emprestimo.id }}</td>
+
+                                <td class="nome-colaborador">
+                                    {{ emprestimo.colaborador.nome }}
+                                </td>
+
+                                <td>{{ emprestimo.equipamento.nome }}</td>
+
+                                <td>
+                                    {{ emprestimo.data_entrega|date:"d/m/Y H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ emprestimo.data_prevista_devolucao|date:"d/m/Y H:i" }}
+                                </td>
+
+                                <td>
+                                    {% if emprestimo.data_devolucao %}
+                                        {{ emprestimo.data_devolucao|date:"d/m/Y H:i" }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="status-emprestimo status-{{ emprestimo.status|slugify }}">
+                                        {{ emprestimo.status }}
+                                    </span>
+                                </td>
+
+                                <td class="coluna-acoes">
+                                    <a
+                                        href="{% url 'emprestimo-editar' emprestimo.id %}"
+                                        class="botao-acao botao-editar"
+                                    >
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="mensagem-vazia">
+                                    <span class="icone-vazio">📋</span>
+                                    <strong>Nenhum empréstimo encontrado</strong>
+                                    <p>Não há registros correspondentes aos filtros selecionados.</p>
+                                    <a href="{% url 'emprestimos-lista' %}" class="botao botao-secundario">
+                                        Limpar filtros
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
+    </div>
+</body>
+</html>
+```

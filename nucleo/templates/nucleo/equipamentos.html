@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de EPIs | Equipamentos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link ativo">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Gerenciamento de equipamentos</h2>
+                    <p>Consulte e gerencie os equipamentos de proteção individual.</p>
+                </div>
+
+                <a href="{% url 'equipamento-criar' %}" class="botao botao-principal">
+                    + Cadastrar equipamento
+                </a>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mensagem-sistema mensagem-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                            <th>CA</th>
+                            <th class="coluna-acoes">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for equipamento in equipamentos %}
+                            <tr>
+                                <td>{{ equipamento.id }}</td>
+                                <td class="nome-colaborador">{{ equipamento.nome }}</td>
+                                <td>{{ equipamento.descricao|default:"—" }}</td>
+                                <td>{{ equipamento.quantidade }}</td>
+                                <td>{{ equipamento.ca|default:"—" }}</td>
+
+                                <td class="coluna-acoes">
+                                    <div class="acoes-tabela">
+                                        <a
+                                            href="{% url 'equipamento-editar' equipamento.id %}"
+                                            class="botao-acao botao-editar"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            method="POST"
+                                            action="{% url 'equipamento-excluir' equipamento.id %}"
+                                            onsubmit="return confirm('Tem certeza de que deseja excluir este equipamento?');"
+                                        >
+                                            {% csrf_token %}
+                                            <button type="submit" class="botao-acao botao-excluir">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="mensagem-vazia">
+                                    <span class="icone-vazio">🦺</span>
+                                    <strong>Nenhum equipamento cadastrado</strong>
+                                    <p>Cadastre um equipamento para começar.</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
+    </div>
+</body>
+</html>

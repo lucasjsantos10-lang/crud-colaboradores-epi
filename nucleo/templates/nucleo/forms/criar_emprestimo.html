@@ -1,0 +1,165 @@
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de EPIs | Novo empréstimo</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link ativo">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Novo empréstimo de EPI</h2>
+                    <p>Preencha os dados do colaborador, do equipamento e do período de utilização.</p>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mensagem-sistema mensagem-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if not colaboradores %}
+                <div class="mensagem-sistema mensagem-warning">
+                    <strong>Nenhum colaborador cadastrado.</strong>
+                    <p>Cadastre um colaborador antes de registrar um empréstimo.</p>
+                    <a href="{% url 'nucleo-criar' %}" class="botao botao-secundario">
+                        ➕ Cadastrar colaborador
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if not equipamentos %}
+                <div class="mensagem-sistema mensagem-warning">
+                    <strong>Nenhum equipamento cadastrado.</strong>
+                    <p>Cadastre um equipamento antes de registrar um empréstimo.</p>
+                    <a href="{% url 'equipamento-criar' %}" class="botao botao-secundario">
+                        ➕ Cadastrar equipamento
+                    </a>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'emprestimo-salvar' %}" class="formulario-sistema">
+                {% csrf_token %}
+
+                <div class="campo-formulario">
+                    <label for="colaborador">Colaborador *</label>
+                    <select name="colaborador" id="colaborador" required>
+                        <option value="">Selecione um colaborador</option>
+                        {% for colaborador in colaboradores %}
+                            <option value="{{ colaborador.id }}">
+                                {{ colaborador.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="campo-formulario">
+                    <label for="status">Status inicial *</label>
+                    <select name="status" id="status" required>
+                        <option value="Emprestado" selected>Emprestado</option>
+                        <option value="Fornecido">Fornecido</option>
+                    </select>
+                    <small>
+                        Selecione "Emprestado" para um item com previsão de devolução
+                        ou "Fornecido" para um item entregue ao colaborador.
+                    </small>
+                </div>
+                
+                <div class="campo-formulario">
+                    <label for="equipamento">Equipamento *</label>
+                    <select name="equipamento" id="equipamento" required>
+                        <option value="">Selecione um equipamento</option>
+                        {% for equipamento in equipamentos %}
+                            <option value="{{ equipamento.id }}">
+                                {{ equipamento.nome }} — Quantidade: {{ equipamento.quantidade }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="data_entrega">Data e hora da entrega *</label>
+                    <input
+                        type="datetime-local"
+                        name="data_entrega"
+                        id="data_entrega"
+                        required
+                    >
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="data_prevista_devolucao">Data e hora prevista para devolução *</label>
+                    <input
+                        type="datetime-local"
+                        name="data_prevista_devolucao"
+                        id="data_prevista_devolucao"
+                        required
+                    >
+                    <small>Informe a data e o horário previstos para a devolução do equipamento.</small>
+                </div>
+
+                <div class="botoes-formulario">
+                    <button
+                        type="submit"
+                        class="botao botao-principal"
+                        {% if not colaboradores or not equipamentos %}disabled{% endif %}
+                    >
+                        Cadastrar empréstimo
+                    </button>
+
+                    <a href="{% url 'emprestimos-lista' %}" class="botao botao-secundario">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
+    </div>
+</body>
+</html>
+```

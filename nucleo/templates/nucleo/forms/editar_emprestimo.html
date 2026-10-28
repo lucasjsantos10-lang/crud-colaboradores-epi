@@ -1,0 +1,204 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar empréstimo | Gestão de EPIs</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link ativo">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Editar empréstimo de EPI</h2>
+                    <p>Atualize o status e registre a devolução, quando necessário.</p>
+                </div>
+            </div>
+
+            {% if messages %}
+                <div class="mensagens-sistema">
+                    {% for message in messages %}
+                        <div class="mensagem {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <section class="cartao-formulario">
+                <form method="POST" class="formulario-sistema">
+                    {% csrf_token %}
+
+                    <div class="campo-formulario">
+                        <label for="colaborador">Colaborador</label>
+                        <input
+                            type="text"
+                            id="colaborador"
+                            value="{{ emprestimo.colaborador.nome }}"
+                            disabled
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="equipamento">Equipamento</label>
+                        <input
+                            type="text"
+                            id="equipamento"
+                            value="{{ emprestimo.equipamento.nome }}"
+                            disabled
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="data-entrega">Data e hora da entrega</label>
+                        <input
+                            type="text"
+                            id="data-entrega"
+                            value="{{ emprestimo.data_entrega|date:'d/m/Y H:i' }}"
+                            disabled
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="data-prevista">Devolução prevista</label>
+                        <input
+                            type="text"
+                            id="data-prevista"
+                            value="{{ emprestimo.data_prevista_devolucao|date:'d/m/Y H:i' }}"
+                            disabled
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="status">Status do empréstimo *</label>
+                        <select name="status" id="status" required>
+                            {% for valor, rotulo in emprestimo.STATUS_CHOICES %}
+                                <option
+                                    value="{{ valor }}"
+                                    {% if emprestimo.status == valor %}selected{% endif %}
+                                >
+                                    {{ rotulo }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div
+                        class="campo-formulario"
+                        id="campo-devolucao"
+                    >
+                        <label for="data_devolucao">
+                            Data e hora da devolução, dano ou perda
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="data_devolucao"
+                            id="data_devolucao"
+                            value="{{ emprestimo.data_devolucao|date:'Y-m-d\TH:i' }}"
+                        >
+                    </div>
+
+                    <div
+                        class="campo-formulario"
+                        id="campo-observacao"
+                    >
+                        <label for="observacao_devolucao">
+                            Observação sobre a devolução
+                        </label>
+
+                        <textarea
+                            name="observacao_devolucao"
+                            id="observacao_devolucao"
+                            rows="4"
+                        >{{ emprestimo.observacao_devolucao }}</textarea>
+                    </div>
+
+                    <div class="botoes-formulario">
+                        <button
+                            type="submit"
+                            class="botao botao-principal"
+                        >
+                            Salvar alterações
+                        </button>
+
+                        <a
+                            href="{% url 'emprestimos-lista' %}"
+                            class="botao botao-secundario"
+                        >
+                            Cancelar
+                        </a>
+                    </div>
+
+                </form>
+            </section>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
+    </div>
+
+    <script>
+        const statusEmprestimo = document.getElementById('status');
+        const campoDevolucao = document.getElementById('campo-devolucao');
+        const campoObservacao = document.getElementById('campo-observacao');
+        const dataDevolucao = document.getElementById('data_devolucao');
+
+        function atualizarCampos() {
+            const exigeRegistro = [
+                'Devolvido',
+                'Danificado',
+                'Perdido'
+            ].includes(statusEmprestimo.value);
+
+            campoDevolucao.style.display = exigeRegistro ? 'block' : 'none';
+            campoObservacao.style.display = exigeRegistro ? 'block' : 'none';
+
+            dataDevolucao.required = exigeRegistro;
+        }
+
+        statusEmprestimo.addEventListener('change', atualizarCampos);
+
+        atualizarCampos();
+    </script>
+
+</body>
+</html>

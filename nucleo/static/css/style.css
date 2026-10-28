@@ -1,10 +1,599 @@
+/* ==============================
+   CONFIGURAÇÕES GERAIS
+============================== */
+
 * {
     box-sizing: border-box;
 }
 
-h1 {
-    color: #f90;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 28px;
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f6f8;
+    color: #333333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
 }
 
+.container {
+    width: min(1200px, 94%);
+    margin: 35px auto;
+}
+
+/* ==============================
+   CABEÇALHO
+============================== */
+
+.cabecalho {
+    background: linear-gradient(135deg, #ff9900, #ffad33);
+    color: white;
+    padding: 30px 35px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cabecalho .subtitulo {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    opacity: 0.95;
+}
+
+.cabecalho h1 {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    margin: 0 0 8px;
+}
+
+.cabecalho p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* ==============================
+   MENU DE NAVEGAÇÃO
+============================== */
+
+.menu-navegacao {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 25px;
+}
+
+.menu-navegacao a {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #ff9900;
+    border-radius: 7px;
+    background-color: white;
+    color: #d97900;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.menu-navegacao a:hover {
+    background-color: #ff9900;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.menu-navegacao a.ativo {
+    background-color: #ff9900;
+    color: white;
+}
+
+/* ==============================
+   CARTÃO PRINCIPAL
+============================== */
+
+.cartao-principal {
+    background-color: white;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eeeeee;
+}
+
+.titulo-secao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.titulo-secao h2 {
+    margin: 0 0 5px;
+    color: #333333;
+    font-size: 23px;
+}
+
+.titulo-secao p {
+    margin: 0;
+    color: #777777;
+    font-size: 14px;
+}
+
+/* ==============================
+   BOTÕES
+============================== */
+
+.botao {
+    display: inline-block;
+    padding: 11px 17px;
+    border: none;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.botao-principal {
+    background-color: #ff9900;
+    color: white;
+}
+
+.botao-principal:hover {
+    background-color: #e68a00;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.botao-pesquisar {
+    background-color: #ff9900;
+    color: white;
+}
+
+.botao-pesquisar:hover {
+    background-color: #e68a00;
+}
+
+/* ==============================
+   PESQUISA
+============================== */
+
+.form-pesquisa {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.form-pesquisa input {
+    flex: 1;
+    min-width: 220px;
+    max-width: 500px;
+    padding: 11px 14px;
+    border: 1px solid #dddddd;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-pesquisa input:focus {
+    border-color: #ff9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.13);
+}
+
+.limpar-pesquisa {
+    color: #b66a00;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.limpar-pesquisa:hover {
+    text-decoration: underline;
+}
+
+/* ==============================
+   TABELA
+============================== */
+
+.tabela-responsiva {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+thead {
+    background-color: #fff2df;
+}
+
+th {
+    padding: 15px 16px;
+    color: #9c5b00;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 2px solid #ff9900;
+}
+
+td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #eeeeee;
+    color: #555555;
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background-color: #fffaf3;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.nome-colaborador {
+    color: #333333;
+    font-weight: 600;
+}
+
+.coluna-acoes {
+    min-width: 160px;
+}
+
+/* ==============================
+   AÇÕES DA TABELA
+============================== */
+
+.acoes-tabela {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.acoes-tabela form {
+    display: inline;
+    margin: 0;
+}
+
+.botao-acao {
+    display: inline-block;
+    padding: 7px 11px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.botao-editar {
+    background-color: #fff0d9;
+    color: #9c5b00;
+}
+
+.botao-editar:hover {
+    background-color: #ffe0b0;
+}
+
+.botao-excluir {
+    background-color: #fdeaea;
+    color: #b42318;
+}
+
+.botao-excluir:hover {
+    background-color: #f8d0d0;
+}
+
+/* ==============================
+   LISTA VAZIA E CONTADOR
+============================== */
+
+.mensagem-vazia {
+    padding: 45px 15px;
+    text-align: center;
+}
+
+.mensagem-vazia .icone-vazio {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 32px;
+}
+
+.mensagem-vazia strong {
+    display: block;
+    color: #444444;
+    font-size: 17px;
+}
+
+.mensagem-vazia p {
+    margin: 5px 0 0;
+    color: #777777;
+}
+
+.rodape-tabela {
+    padding-top: 18px;
+    color: #777777;
+    font-size: 13px;
+    border-top: 1px solid #eeeeee;
+}
+
+/* ==============================
+   RODAPÉ DO SISTEMA
+============================== */
+
+.rodape-sistema {
+    padding: 22px 0;
+    color: #888888;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* ==============================
+   TELAS MENORES
+============================== */
+
+@media (max-width: 650px) {
+    .container {
+        width: 94%;
+        margin: 18px auto;
+    }
+
+    .cabecalho {
+        padding: 24px 20px;
+    }
+
+    .cabecalho h1 {
+        font-size: 25px;
+    }
+
+    .cartao-principal {
+        padding: 18px 14px;
+    }
+
+    .titulo-secao h2 {
+        font-size: 20px;
+    }
+
+    .titulo-secao .botao {
+        width: 100%;
+    }
+
+    .menu-navegacao {
+        gap: 8px;
+    }
+
+    .menu-navegacao a {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 12px 10px;
+    }
+}
+/* ==============================
+   MENSAGENS DO SISTEMA
+============================== */
+
+.mensagem-sistema {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.mensagem-success {
+    background-color: #e8f7ed;
+    color: #176b35;
+    border: 1px solid #b8e4c5;
+}
+
+.mensagem-error {
+    background-color: #fdeaea;
+    color: #b42318;
+    border: 1px solid #f5c2c0;
+}
+
+.mensagem-warning {
+    background-color: #fff4df;
+    color: #8a5700;
+    border: 1px solid #ffdf9e;
+}
+
+.mensagem-info {
+    background-color: #eaf4ff;
+    color: #175a91;
+    border: 1px solid #c6e0fa;
+}
+/* ==============================
+   STATUS DOS EMPRÉSTIMOS
+============================== */
+
+.status-emprestimo {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-emprestado {
+    background-color: #fff0d9;
+    color: #9c5b00;
+}
+
+.status-fornecido {
+    background-color: #eaf4ff;
+    color: #175a91;
+}
+
+.status-devolvido {
+    background-color: #e8f7ed;
+    color: #176b35;
+}
+
+.status-danificado {
+    background-color: #fdeaea;
+    color: #b42318;
+}
+
+.status-perdido {
+    background-color: #eeeeee;
+    color: #555555;
+}
+/* ==============================
+   FORMULÁRIOS DO SISTEMA
+============================== */
+
+.formulario-sistema {
+    max-width: 850px;
+}
+
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 20px;
+}
+
+.campo-formulario label {
+    color: #444444;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.campo-formulario input,
+.campo-formulario textarea,
+.campo-formulario select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #dddddd;
+    border-radius: 7px;
+    background-color: white;
+    color: #333333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo-formulario input:focus,
+.campo-formulario textarea:focus,
+.campo-formulario select:focus {
+    border-color: #ff9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.13);
+}
+
+.campo-formulario textarea {
+    resize: vertical;
+}
+
+.botoes-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.botao-secundario {
+    background-color: #fff0d9;
+    color: #9c5b00;
+    border: 1px solid #ffcc80;
+}
+
+.botao-secundario:hover {
+    background-color: #ffe0b0;
+    color: #854d00;
+}
+
+.botao-neutro {
+    background-color: #f0f1f3;
+    color: #555555;
+    border: 1px solid #dddddd;
+}
+
+.botao-neutro:hover {
+    background-color: #e2e4e7;
+    color: #333333;
+}
+
+@media (max-width: 650px) {
+    .formulario-sistema {
+        max-width: 100%;
+    }
+
+    .botoes-formulario {
+        flex-direction: column;
+    }
+
+    .botoes-formulario .botao {
+        width: 100%;
+    }
+}
+
+/* Filtros do histórico de empréstimos */
+.filtros-emprestimos {
+    margin: 25px 0 30px;
+    padding: 22px;
+    background: #fffaf5;
+    border: 1px solid #f0dfce;
+    border-radius: 10px;
+}
+
+.filtros-emprestimos h3 {
+    margin: 0 0 5px;
+    color: #333;
+    font-size: 19px;
+}
+
+.filtros-emprestimos > p {
+    margin: 0 0 20px;
+    color: #777;
+}
+
+.filtros-emprestimos .formulario-sistema {
+    margin-top: 0;
+}
+
+.filtros-emprestimos .botoes-formulario {
+    margin-top: 10px;
+}
+
+.titulo-resultados {
+    margin: 30px 0 15px;
+}
+
+.titulo-resultados h3 {
+    margin: 0;
+    font-size: 19px;
+}
+
+@media (max-width: 650px) {
+    .filtros-emprestimos {
+        padding: 15px;
+    }
+
+    .filtros-emprestimos .botoes-formulario .botao {
+        width: 100%;
+        justify-content: center;
+    }
+}

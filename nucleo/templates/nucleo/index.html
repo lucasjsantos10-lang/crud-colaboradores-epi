@@ -1,66 +1,280 @@
-
+```html
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colaboradores</title>
+    <title>Gestão de EPIs | Colaboradores</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>Lista de Colaboradores</h1>
 
-        <form method="GET" action="{% url 'nucleo-inicial' %}">
-            <input
-                type="text"
-                name="busca"
-                placeholder="Pesquisar por nome"
-                value="{{ busca }}"
+        <header class="cabecalho">
+            <div>
+                <span class="subtitulo">SISTEMA DE GESTÃO</span>
+                <h1>Gestão de EPIs</h1>
+                <p>Controle de colaboradores e equipamentos de proteção individual.</p>
+            </div>
+        </header>
+
+        <nav class="menu-navegacao">
+            <a href="{% url 'nucleo-inicial' %}" class="menu-link ativo">
+                👥 Colaboradores
+            </a>
+
+            <a href="{% url 'equipamentos-lista' %}" class="menu-link">
+                🦺 Equipamentos
+            </a>
+
+            <a href="{% url 'emprestimos-lista' %}" class="menu-link">
+                📋 Empréstimos
+            </a>
+
+            <a href="{% url 'emprestimo-criar' %}" class="menu-link">
+                ➕ Novo empréstimo
+            </a>
+
+            <a href="{% url 'equipamento-criar' %}" class="menu-link">
+                ➕ Cadastrar equipamento
+            </a>
+        </nav>
+
+        <main class="cartao-principal">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Lista de colaboradores</h2>
+                    <p>Consulte e gerencie os colaboradores cadastrados.</p>
+                </div>
+
+                <button
+                    type="button"
+                    class="botao botao-principal"
+                    onclick="alternarFormulario()"
+                >
+                    + Novo colaborador
+                </button>
+            </div>
+
+            <!-- FORMULÁRIO DE CADASTRO NA MESMA TELA -->
+            <section
+                id="formulario-colaborador"
+                class="cartao-formulario"
+                hidden
             >
-            <button type="submit">Pesquisar</button>
-            <a href="{% url 'nucleo-criar' %}">+ Criar</a>
-        </form>
+                <h3>Novo colaborador</h3>
+                <p>Preencha os dados para cadastrar um colaborador.</p>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Telefone</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for colaborador in colaboradores %}
-                    <tr>
-                        <td>{{ colaborador.id }}</td>
-                        <td>{{ colaborador.nome }}</td>
-                        <td>{{ colaborador.telefone }}</td>
-                        <td>
-                            <a href="{% url 'nucleo-editar' colaborador.id %}">
-                                Editar
-                            </a>
+                <form
+                    method="POST"
+                    action="{% url 'nucleo-salvar' %}"
+                    class="formulario-sistema"
+                >
+                    {% csrf_token %}
 
-                            <form
-                                method="POST"
-                                action="{% url 'nucleo-excluir' colaborador.id %}"
-                                style="display: inline;"
-                                onsubmit="return confirm('Deseja realmente excluir este colaborador?');"
-                            >
-                                {% csrf_token %}
-                                <button type="submit">Excluir</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4">Nenhum colaborador encontrado.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    <div class="campo-formulario">
+                        <label for="nome-colaborador">Nome</label>
+                        <input
+                            type="text"
+                            id="nome-colaborador"
+                            name="nome"
+                            maxlength="30"
+                            required
+                            placeholder="Digite o nome do colaborador"
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="telefone-colaborador">Telefone</label>
+                        <input
+                            type="text"
+                            id="telefone-colaborador"
+                            name="telefone"
+                            maxlength="30"
+                            placeholder="Digite o telefone"
+                        >
+                    </div>
+
+                    <div class="botoes-formulario">
+                        <button
+                            type="submit"
+                            class="botao botao-principal"
+                        >
+                            Salvar colaborador
+                        </button>
+
+                        <button
+                            type="button"
+                            class="botao"
+                            onclick="alternarFormulario(false)"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- MENSAGENS DO SISTEMA -->
+            {% if messages %}
+                <div class="mensagens-sistema">
+                    {% for message in messages %}
+                        <div class="mensagem {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- PESQUISA DE COLABORADORES -->
+            <form
+                method="GET"
+                action="{% url 'nucleo-inicial' %}"
+                class="form-pesquisa"
+            >
+                <input
+                    type="text"
+                    name="busca"
+                    placeholder="Digite o nome do colaborador..."
+                    value="{{ busca }}"
+                    aria-label="Pesquisar colaborador por nome"
+                >
+
+                <button type="submit" class="botao botao-pesquisar">
+                    Pesquisar
+                </button>
+
+                {% if busca %}
+                    <a
+                        href="{% url 'nucleo-inicial' %}"
+                        class="limpar-pesquisa"
+                    >
+                        Limpar busca
+                    </a>
+                {% endif %}
+            </form>
+
+            <!-- TABELA DE COLABORADORES -->
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th class="coluna-acoes">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for colaborador in colaboradores %}
+                            <tr>
+                                <td>{{ colaborador.id }}</td>
+
+                                <td class="nome-colaborador">
+                                    {{ colaborador.nome }}
+                                </td>
+
+                                <td>
+                                    {{ colaborador.telefone|default:"Não informado" }}
+                                </td>
+
+                                <td class="coluna-acoes">
+                                    <div class="acoes-tabela">
+
+                                        <a
+                                            href="{% url 'nucleo-editar' colaborador.id %}"
+                                            class="botao-acao botao-editar"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            method="POST"
+                                            action="{% url 'nucleo-excluir' colaborador.id %}"
+                                            onsubmit="return confirm('Deseja realmente excluir este colaborador?');"
+                                        >
+                                            {% csrf_token %}
+
+                                            <button
+                                                type="submit"
+                                                class="botao-acao botao-excluir"
+                                            >
+                                                Excluir
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="4" class="mensagem-vazia">
+                                    <span class="icone-vazio">👥</span>
+
+                                    <strong>Nenhum colaborador encontrado</strong>
+
+                                    <p>
+                                        {% if busca %}
+                                            Tente pesquisar por outro nome.
+                                        {% else %}
+                                            Cadastre o primeiro colaborador para começar.
+                                        {% endif %}
+                                    </p>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CONTADOR DE REGISTROS -->
+            <div class="rodape-tabela">
+                {% with total=colaboradores|length %}
+                    <span>
+                        {{ total }}
+                        colaborador{{ total|pluralize:"es" }}
+                        encontrado{{ total|pluralize:"s" }}
+                    </span>
+                {% endwith %}
+            </div>
+
+        </main>
+
+        <footer class="rodape-sistema">
+            Sistema de Gestão de EPIs
+        </footer>
+
     </div>
+
+    <!-- ABRIR E FECHAR O FORMULÁRIO -->
+    <script>
+        function alternarFormulario(abrir) {
+            const formulario = document.getElementById(
+                'formulario-colaborador'
+            );
+
+            if (abrir === undefined) {
+                abrir = formulario.hidden;
+            }
+
+            formulario.hidden = !abrir;
+
+            if (abrir) {
+                document.getElementById('nome-colaborador').focus();
+
+                formulario.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }
+    </script>
+
 </body>
 </html>
+```
